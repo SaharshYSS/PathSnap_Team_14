@@ -1,0 +1,108 @@
+{
+ "search": {
+  "n_trials": 19,
+  "n_complete": 12,
+  "subsample": 0.15,
+  "folds": 3,
+  "best_trial": 13,
+  "best_search_top1": 0.9005708667326116,
+  "baseline_search_top1": 0.8944310419323713,
+  "baseline_search_logloss": 0.06645363405756749
+ },
+ "params": {
+  "num_leaves": 62,
+  "learning_rate": 0.08805247768572459,
+  "min_child_samples": 81,
+  "subsample": 0.5396845522267621,
+  "colsample_bytree": 0.5098476053822071,
+  "reg_lambda": 1.4416536811431062,
+  "reg_alpha": 2.0077204669560746,
+  "min_split_gain": 0.3581511398843874,
+  "max_bin": 127,
+  "n_estimators": 117
+ },
+ "threshold": 0.44999999999999996,
+ "seed": 42,
+ "features": [
+  "d",
+  "lat_off",
+  "frac",
+  "proj_clamped",
+  "arc_len",
+  "dist_to_end",
+  "dist_from_start",
+  "speed",
+  "hdg_valid",
+  "cos_dh",
+  "abs_dh_deg",
+  "motion_along",
+  "n_cand",
+  "rank_d",
+  "d_minus_dmin",
+  "d_ratio",
+  "rank_d_dir",
+  "twin_exists",
+  "deg_from_out",
+  "deg_to_out",
+  "deg_from_in",
+  "deg_to_in",
+  "d_mean_w3",
+  "d_max_w6",
+  "d_mean_w6",
+  "frac_near_w6",
+  "prog_w3",
+  "prog_w6",
+  "prog_ratio_w3",
+  "dt_prev",
+  "dt_next"
+ ],
+ "cv5": {
+  "top1": 0.9011315905974323,
+  "top1_fold_std": 0.023979523705871322,
+  "macro_f1": 0.9453417923092251,
+  "precision": 0.9083070764391802,
+  "recall": 0.891868105761599,
+  "log_loss": 0.04636186762447046,
+  "folds": [
+   {
+    "fold": 0,
+    "top1": 0.8801521421907519,
+    "macro_f1": 0.9315064518741047
+   },
+   {
+    "fold": 1,
+    "top1": 0.9289944536709178,
+    "macro_f1": 0.9577428985485621
+   },
+   {
+    "fold": 2,
+    "top1": 0.8991054904380013,
+    "macro_f1": 0.9431432391745103
+   },
+   {
+    "fold": 3,
+    "top1": 0.9279951418408953,
+    "macro_f1": 0.9618857022393363
+   },
+   {
+    "fold": 4,
+    "top1": 0.8814621761890854,
+    "macro_f1": 0.9357455935976569
+   }
+  ]
+ },
+ "student_test": {
+  "top1": 0.9048241258558511,
+  "macro_f1": 0.9463317192835801,
+  "precision": 0.9040547656661401,
+  "recall": 0.8972978623320964,
+  "log_loss": 0.037911859232607585,
+  "baseline_top1": 0.8995975539643548,
+  "baseline_log_loss": 0.044962841947712925,
+  "baseline_macro_f1_at_0p5": 0.9441784863082576
+ },
+ "timing": {
+  "full_fit_s": 28.76205348968506,
+  "inference_s": 1.2829875946044922
+ }
+}
