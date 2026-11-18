@@ -1,0 +1,23 @@
+# --- raw + derived data (rebuilt by scripts/01_build_dataset.py / 05_tune_hgb.py) ---
+data/
+Student folder/
+evaluator_data/
+evaluator_test/
+*.parquet
+*.npy
+*.zip
+results/tables/optuna_*.db
+
+# --- Python / editor clutter ---
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+.venv/
+venv/
+.vscode/
+.idea/
+.DS_Store
+
+# --- secrets: never commit ---
+.env
+*.key
