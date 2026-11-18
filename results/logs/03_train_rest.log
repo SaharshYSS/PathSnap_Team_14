@@ -1,0 +1,22 @@
+train rows 2150636 pos rate 0.08611824595143018 | test rows 255743
+
+=== HistGradBoost
+ fold0: top1=0.8739 macroF1@.5=0.9282 logloss=0.0685 cont=0.9672 fit=15.3s
+ fold1: top1=0.9232 macroF1@.5=0.9556 logloss=0.0353 cont=0.9774 fit=14.3s
+ fold2: top1=0.8854 macroF1@.5=0.9389 logloss=0.0513 cont=0.9735 fit=15.9s
+ fold3: top1=0.9237 macroF1@.5=0.9590 logloss=0.0374 cont=0.9692 fit=17.4s
+ fold4: top1=0.8780 macroF1@.5=0.9339 logloss=0.0663 cont=0.9715 fit=13.4s
+ CV: top1=0.8947 F1=0.9425(thr 0.45) ll=0.0518 cont=0.9715
+ TEST: top1=0.8991 F1=0.9436 ll=0.0401 cont=0.9728 inf=0.4s | train top1=0.9261 | total 123s
+
+=== LightGBM
+ fold0: top1=0.8734 macroF1@.5=0.9293 logloss=0.0746 cont=0.9658 fit=36.4s
+ fold1: top1=0.9238 macroF1@.5=0.9558 logloss=0.0385 cont=0.9776 fit=35.9s
+ fold2: top1=0.8901 macroF1@.5=0.9394 logloss=0.0491 cont=0.9725 fit=42.2s
+ fold3: top1=0.9229 macroF1@.5=0.9596 logloss=0.0411 cont=0.9684 fit=37.2s
+ fold4: top1=0.8722 macroF1@.5=0.9321 logloss=0.0933 cont=0.9697 fit=39.5s
+Traceback (most recent call last):
+  File "/home/claude/work/pathsnap/scripts/03_train_compare.py", line 119, in <module>
+    r = h.evals_result_; hist = dict(train=r["training"]["binary_logloss"], val=r["valid_1"]["binary_logloss"], metric="logloss")
+                                           ~^^^^^^^^^^^^
+KeyError: 'training'

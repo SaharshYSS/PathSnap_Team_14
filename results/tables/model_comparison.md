@@ -1,0 +1,8 @@
+| Model         | Algorithm family       |   CV Macro F1 (cand.) |   CV Top-1 |   CV Route continuity |   Test Macro F1 (cand.) |   Test Top-1 |   Test Log loss |   Inference ms/fix |
+|:--------------|:-----------------------|----------------------:|-----------:|----------------------:|------------------------:|-------------:|----------------:|-------------------:|
+| MLP           | Neural network         |                0.9358 |     0.897  |                0.9785 |                  0.934  |       0.8983 |          0.0459 |             0.029  |
+| HistGradBoost | Boosting (sklearn)     |                0.9425 |     0.8947 |                0.9715 |                  0.9436 |       0.8991 |          0.0401 |             0.0202 |
+| LightGBM      | Boosting (LightGBM)    |                0.9422 |     0.8937 |                0.9705 |                  0.9448 |       0.9002 |          0.0447 |             0.0768 |
+| LogReg        | Linear / probabilistic |                0.9314 |     0.8927 |                0.9751 |                  0.9297 |       0.8896 |          0.0513 |             0.0053 |
+| DecisionTree  | Tree-based             |                0.9362 |     0.8891 |                0.9686 |                  0.9357 |       0.8911 |          0.0528 |             0.0057 |
+| GaussianNB    | Linear / probabilistic |                0.8964 |     0.8618 |                0.965  |                  0.8861 |       0.8407 |          0.4119 |             0.0098 |

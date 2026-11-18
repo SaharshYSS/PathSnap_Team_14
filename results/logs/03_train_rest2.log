@@ -1,0 +1,19 @@
+train rows 2150636 pos rate 0.08611824595143018 | test rows 255743
+
+=== LightGBM
+ fold0: top1=0.8702 macroF1@.5=0.9282 logloss=0.0802 cont=0.9655 fit=44.4s
+ fold1: top1=0.9238 macroF1@.5=0.9558 logloss=0.0385 cont=0.9776 fit=34.7s
+ fold2: top1=0.8868 macroF1@.5=0.9381 logloss=0.0564 cont=0.9708 fit=35.7s
+ fold3: top1=0.9229 macroF1@.5=0.9596 logloss=0.0411 cont=0.9684 fit=49.5s
+ fold4: top1=0.8765 macroF1@.5=0.9337 logloss=0.0831 cont=0.9716 fit=43.5s
+ CV: top1=0.8937 F1=0.9422(thr 0.45) ll=0.0599 cont=0.9705
+ TEST: top1=0.9002 F1=0.9448 ll=0.0447 cont=0.9726 inf=1.5s | train top1=0.9286 | total 335s
+
+=== MLP
+ fold0: top1=0.8724 macroF1@.5=0.9224 logloss=0.0931 cont=0.9743 fit=37.5s
+ fold1: top1=0.9217 macroF1@.5=0.9449 logloss=0.0432 cont=0.9823 fit=56.8s
+ fold2: top1=0.8883 macroF1@.5=0.9277 logloss=0.0528 cont=0.9797 fit=40.8s
+ fold3: top1=0.9284 macroF1@.5=0.9539 logloss=0.0382 cont=0.9785 fit=38.5s
+ fold4: top1=0.8843 macroF1@.5=0.9296 logloss=0.0766 cont=0.9786 fit=37.3s
+ CV: top1=0.8970 F1=0.9358(thr 0.42) ll=0.0608 cont=0.9785
+ TEST: top1=0.8983 F1=0.9340 ll=0.0459 cont=0.9784 inf=0.6s | train top1=0.9304 | total 329s

@@ -1,0 +1,28 @@
+train rows 2150636 pos rate 0.08611824595143018 | test rows 255743
+
+=== LogReg
+ fold0: top1=0.8682 macroF1@.5=0.9168 logloss=0.0777 cont=0.9664 fit=15.3s
+ fold1: top1=0.9182 macroF1@.5=0.9417 logloss=0.0474 cont=0.9807 fit=15.1s
+ fold2: top1=0.8969 macroF1@.5=0.9323 logloss=0.0557 cont=0.9795 fit=14.8s
+ fold3: top1=0.9272 macroF1@.5=0.9506 logloss=0.0438 cont=0.9770 fit=15.3s
+ fold4: top1=0.8675 macroF1@.5=0.9210 logloss=0.0868 cont=0.9744 fit=15.3s
+ CV: top1=0.8927 F1=0.9314(thr 0.50) ll=0.0623 cont=0.9751
+ TEST: top1=0.8896 F1=0.9297 ll=0.0513 cont=0.9764 inf=0.1s | train top1=0.8966 | total 106s
+
+=== GaussianNB
+ fold0: top1=0.8486 macroF1@.5=0.8755 logloss=0.4568 cont=0.9498 fit=7.8s
+ fold1: top1=0.8922 macroF1@.5=0.9031 logloss=0.2724 cont=0.9723 fit=7.6s
+ fold2: top1=0.8594 macroF1@.5=0.8913 logloss=0.3210 cont=0.9706 fit=7.4s
+ fold3: top1=0.9045 macroF1@.5=0.9015 logloss=0.3009 cont=0.9716 fit=7.7s
+ fold4: top1=0.8212 macroF1@.5=0.8609 logloss=0.6250 cont=0.9647 fit=7.5s
+ CV: top1=0.8618 F1=0.8964(thr 0.95) ll=0.3954 cont=0.9650
+ TEST: top1=0.8407 F1=0.8861 ll=0.4119 cont=0.9718 inf=0.2s | train top1=0.8626 | total 60s
+
+=== DecisionTree
+ fold0: top1=0.8664 macroF1@.5=0.9209 logloss=0.0970 cont=0.9593 fit=65.8s
+ fold1: top1=0.9208 macroF1@.5=0.9515 logloss=0.0460 cont=0.9765 fit=65.3s
+ fold2: top1=0.8755 macroF1@.5=0.9308 logloss=0.0588 cont=0.9728 fit=63.5s
+ fold3: top1=0.9245 macroF1@.5=0.9554 logloss=0.0400 cont=0.9718 fit=65.7s
+ fold4: top1=0.8700 macroF1@.5=0.9272 logloss=0.0850 cont=0.9661 fit=66.1s
+ CV: top1=0.8891 F1=0.9362(thr 0.53) ll=0.0654 cont=0.9686
+ TEST: top1=0.8911 F1=0.9357 ll=0.0528 cont=0.9710 inf=0.1s | train top1=0.9274 | total 422s
