@@ -1,0 +1,4 @@
+Stage,Top1,LogLoss,Continuity,RouteF1,ms_per_fix
+Stage-1 HistGB (argmax),0.8948,0.0466,,,
+Tuned HistGB (argmax),0.9052,0.0395,0.9781,,
+Tuned HistGB + Viterbi (end-to-end),0.9329,,0.998,0.9576,0.1627
