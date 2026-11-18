@@ -1,0 +1,22 @@
+{
+ "partition": "student_test",
+ "n_trips": 10,
+ "top1_argmax": 0.9051377201693409,
+ "top1_viterbi": 0.9328908169131866,
+ "cont_argmax": 0.9780507324407888,
+ "cont_viterbi": 0.9979730553362172,
+ "route_precision": 0.9332540532398642,
+ "route_recall": 0.9848771514436496,
+ "route_f1": 0.9576088529648439,
+ "ms_per_fix": 0.1627348643006263,
+ "hmm_params": {
+  "emis_w": 0.451438056370101,
+  "p_floor": 1e-06,
+  "hop_pen": 0.29438910717477723,
+  "uturn_pen": 11.414426037422507,
+  "jump_pen": 18.551678487208793,
+  "max_hops": 6,
+  "gap_s": 10.0,
+  "gap_scale": 0.732914878166913
+ }
+}

@@ -64,3 +64,11 @@ def route_continuity(pred_arcs, t, next_of, max_dt=5.0, hops=3):
             cache[key] = _reach(next_of, key[0], key[1], hops)
         ok += cache[key]; tot += 1
     return ok, tot
+
+
+def route_prf(pred_route, ref_route):
+    """Arc-set overlap between predicted and reference route: (precision, recall, F1)."""
+    P, R = set(pred_route), set(ref_route)
+    tp = len(P & R)
+    pr, rc = tp / max(len(P), 1), tp / max(len(R), 1)
+    return pr, rc, (2 * pr * rc / (pr + rc) if pr + rc else 0.0)
