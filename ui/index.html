@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PathSnap · Evaluator Interface</title>
+<style>
+  :root { --ink:#1d2433; --muted:#667085; --line:#e4e7ec; --bg:#f6f7f9; --card:#fff; --accent:#2166ac; --good:#1a7f4b; --bad:#b42318; }
+  * { box-sizing: border-box; }
+  body { margin:0; font:14px/1.45 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; color:var(--ink); background:var(--bg); }
+  header { padding:18px 28px; background:var(--card); border-bottom:1px solid var(--line); display:flex; align-items:center; gap:24px; flex-wrap:wrap; }
+  header h1 { font-size:18px; margin:0; }
+  header h1 span { color:var(--muted); font-weight:400; }
+  .conn { display:flex; gap:8px; align-items:center; margin-left:auto; }
+  .conn input { width:260px; padding:7px 10px; border:1px solid var(--line); border-radius:6px; font:inherit; }
+  button { font:inherit; cursor:pointer; border-radius:6px; }
+  .btn { padding:7px 14px; border:1px solid var(--accent); background:var(--accent); color:#fff; }
+  .btn:disabled { opacity:.5; cursor:default; }
+  .dot { width:9px; height:9px; border-radius:50%; background:#c4c9d2; display:inline-block; }
+  .dot.ok { background:var(--good); } .dot.err { background:var(--bad); }
+  main { display:grid; grid-template-columns:240px 1fr; gap:20px; padding:20px 28px; }
+  .panel { background:var(--card); border:1px solid var(--line); border-radius:10px; padding:16px; }
+  .panel h2 { font-size:13px; text-transform:uppercase; letter-spacing:.04em; color:var(--muted); margin:0 0 12px; }
+  #trips { display:flex; flex-direction:column; gap:6px; }
+  .trip { text-align:left; padding:9px 12px; border:1px solid var(--line); background:#fff; font-variant-numeric:tabular-nums; }
+  .trip:hover { border-color:var(--accent); }
+  .trip.active { background:var(--accent); border-color:var(--accent); color:#fff; }
+  .hint { color:var(--muted); font-size:13px; }
+  .metrics { display:grid; grid-template-columns:repeat(auto-fit, minmax(150px, 1fr)); gap:12px; margin-bottom:16px; }
+  .m { border:1px solid var(--line); border-radius:8px; padding:10px 12px; }
+  .m .k { color:var(--muted); font-size:12px; }
+  .m .v { font-size:22px; font-weight:600; font-variant-numeric:tabular-nums; }
+  .m .s { color:var(--muted); font-size:12px; }
+  .m.primary .v { color:var(--accent); }
+  iframe { width:100%; height:560px; border:1px solid var(--line); border-radius:8px; background:#eef0f3; }
+  .status { margin:0 0 12px; min-height:20px; }
+  .err { color:var(--bad); }
+  .spinner { display:inline-block; width:14px; height:14px; border:2px solid var(--line); border-top-color:var(--accent); border-radius:50%; animation:spin .8s linear infinite; vertical-align:-2px; margin-right:6px; }
+  @keyframes spin { to { transform:rotate(360deg); } }
+  @media (max-width: 800px) { main { grid-template-columns:1fr; } }
+</style>
+</head>
+<body>
+<header>
+  <h1>PathSnap <span>· GPS map-matching · Evaluator interface</span></h1>
+  <div class="conn">
+    <span id="dot" class="dot" title="API status"></span>
+    <input id="api" placeholder="http://192.168.x.x:8000" aria-label="API address">
+    <button id="connect" class="btn">Connect</button>
+  </div>
+</header>
+
+<main>
+  <section class="panel">
+    <h2>Evaluation trips</h2>
+    <div id="trips"><p class="hint">Enter the API address (Laptop 1) and press Connect.</p></div>
+  </section>
+
+  <section class="panel">
+    <h2 id="title">Result</h2>
+    <p id="status" class="status hint">Select a trip to run the full pipeline on the API.</p>
+    <div id="metrics" class="metrics"></div>
+    <iframe id="map" title="Predicted route map"></iframe>
+  </section>
+</main>
+
+<script>
+  const $ = (id) => document.getElementById(id);
+  const store = { get(k){ try { return localStorage.getItem(k); } catch(e){ return null; } },
+                  set(k,v){ try { localStorage.setItem(k,v); } catch(e){} } };
+  $("api").value = store.get("pathsnap_api") || "http://localhost:8000";
+  const base = () => $("api").value.trim().replace(/\/+$/, "");
+  const pct = (x) => (x === null || x === undefined) ? "n/a" : (100 * x).toFixed(2) + "%";
+  let busy = false;
+
+  async function connect() {
+    store.set("pathsnap_api", base());
+    $("dot").className = "dot"; $("trips").innerHTML = '<p class="hint"><span class="spinner"></span>Connecting…</p>';
+    try {
+      const r = await fetch(base() + "/trips");
+      if (!r.ok) throw new Error((await r.json()).detail || r.statusText);
+      const j = await r.json();
+      $("dot").className = "dot ok";
+      $("trips").innerHTML = "";
+      j.trips.forEach((t) => {
+        const b = document.createElement("button");
+        b.className = "trip"; b.textContent = "Trip " + t; b.dataset.id = t;
+        b.onclick = () => run(t, b);
+        $("trips").appendChild(b);
+      });
+    } catch (e) {
+      $("dot").className = "dot err";
+      $("trips").innerHTML = '<p class="err">Could not reach the API: ' + e.message +
+        '</p><p class="hint">Check the address, that both laptops are on the same network, and that port 8000 is allowed through Laptop 1\'s firewall.</p>';
+    }
+  }
+
+  async function run(id, btn) {
+    if (busy) return; busy = true;
+    document.querySelectorAll(".trip").forEach((b) => { b.classList.remove("active"); b.disabled = true; });
+    btn.classList.add("active");
+    $("title").textContent = "Trip " + id;
+    $("metrics").innerHTML = ""; $("map").srcdoc = "";
+    $("status").className = "status hint";
+    $("status").innerHTML = '<span class="spinner"></span>Sending trip ' + id + ' to the API: candidates → classifier → HMM/Viterbi → scoring…';
+    const t0 = performance.now();
+    try {
+      const r = await fetch(base() + "/predict", { method: "POST", headers: { "Content-Type": "application/json" },
+                                                    body: JSON.stringify({ trip_id: id }) });
+      if (!r.ok) throw new Error((await r.json()).detail || r.statusText);
+      const j = await r.json(), m = j.metrics;
+      const secs = ((performance.now() - t0) / 1000).toFixed(1);
+      $("status").innerHTML = "Done in " + secs + " s (server " + (j.timing_ms.total / 1000).toFixed(1) + " s). " +
+        m.scored_fixes + " of " + m.total_fixes + " GPS fixes scored against the reference held on the API laptop.";
+      const card = (k, v, s, cls) => '<div class="m ' + (cls || "") + '"><div class="k">' + k + '</div><div class="v">' + v + '</div><div class="s">' + (s || "") + "</div></div>";
+      $("metrics").innerHTML =
+        card("Top-1 accuracy (HMM)", pct(m.top1_hmm), "per GPS fix", "primary") +
+        card("Top-1 classifier only", pct(m.top1_classifier_only), "before Viterbi") +
+        card("Route F1", pct(m.route_f1), "P " + pct(m.route_precision) + " · R " + pct(m.route_recall)) +
+        card("Route continuity", pct(m.continuity_hmm), "classifier only " + pct(m.continuity_classifier_only)) +
+        card("Predicted route", j.predicted_route.length + " arcs", j.n_fixes + " GPS fixes");
+      $("map").srcdoc = j.map_html;
+    } catch (e) {
+      $("status").className = "status err"; $("status").textContent = "Error: " + e.message;
+    } finally {
+      busy = false; document.querySelectorAll(".trip").forEach((b) => b.disabled = false);
+    }
+  }
+
+  $("connect").onclick = connect;
+  $("api").addEventListener("keydown", (e) => { if (e.key === "Enter") connect(); });
+</script>
+</body>
+</html>

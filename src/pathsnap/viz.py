@@ -21,7 +21,13 @@ def make_trip_map(trip, pred_arcs=None, title=None, gps_step=None, show_network=
     """Layers: raw GPS (blue), road network (grey), reference route (green), predicted route (red),
     optional candidate arcs of one fix (orange). Layer control + legend included."""
     c = [float(np.mean(trip.lat)), float(np.mean(trip.lon))]
-    m = folium.Map(location=c, zoom_start=14, tiles="OpenStreetMap", control_scale=True)
+    # Several base maps (switch them in the layer control). Esri first: it needs no API key and no Referer header,
+    # so it also loads when the map is shown from a local file (OpenStreetMap's tile servers can refuse that with 403).
+    m = folium.Map(location=c, zoom_start=14, tiles=None, control_scale=True)
+    esri = "https://server.arcgisonline.com/ArcGIS/rest/services/{}/MapServer/tile/{{z}}/{{y}}/{{x}}"
+    folium.TileLayer(esri.format("World_Street_Map"), attr="Tiles &copy; Esri", name="Esri streets").add_to(m)
+    folium.TileLayer(esri.format("World_Imagery"), attr="Tiles &copy; Esri", name="Esri satellite").add_to(m)
+    folium.TileLayer("OpenStreetMap", name="OpenStreetMap").add_to(m)
     m.fit_bounds([[float(trip.lat.min()), float(trip.lon.min())], [float(trip.lat.max()), float(trip.lon.max())]])
     nd, ar = trip.nodes_lonlat, trip.arcs
     if show_network:
@@ -54,14 +60,16 @@ def make_trip_map(trip, pred_arcs=None, title=None, gps_step=None, show_network=
     if candidate_fix is not None:
         folium.Marker([trip.lat[candidate_fix], trip.lon[candidate_fix]], tooltip=f"fix {candidate_fix}",
                       icon=folium.Icon(color="black", icon="crosshairs", prefix="fa")).add_to(m)
+    # legend lists only the layers actually drawn (e.g. no reference route on the evaluator UI map)
+    items = [("#2166ac", "&#9679;", "raw GPS fixes")]
+    if show_network: items.append(("#8a8a8a", "&#9473;", "road network"))
+    if trip.route is not None: items.append(("#1a9850", "&#9473;", "reference route"))
+    if pred_arcs is not None: items.append(("#d73027", "&#9473;", "predicted route"))
+    if candidate_fix is not None and candidate_arcs is not None: items.append(("#fd8d3c", "&#9473;", "candidates (one fix)"))
+    rows = "".join(f'<span style="color:{c}">{sym}</span> {txt}<br>' for c, sym, txt in items)
     legend = f"""<div style="position:fixed;bottom:25px;left:25px;z-index:9999;background:white;padding:8px 12px;
       border:1px solid #888;border-radius:4px;font:12px sans-serif">
-      <b>{title or 'Trip ' + trip.trip_id}</b><br>
-      <span style="color:#2166ac">&#9679;</span> raw GPS fixes<br>
-      <span style="color:#8a8a8a">&#9473;</span> road network<br>
-      <span style="color:#1a9850">&#9473;</span> reference route<br>
-      <span style="color:#d73027">&#9473;</span> predicted route<br>
-      <span style="color:#fd8d3c">&#9473;</span> candidates (one fix)</div>"""
+      <b>{title or 'Trip ' + trip.trip_id}</b><br>{rows}</div>"""
     m.get_root().html.add_child(folium.Element(legend))
     folium.LayerControl(collapsed=False).add_to(m)
     return m
